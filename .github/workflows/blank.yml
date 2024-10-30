@@ -1,0 +1,80 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int coefficient;
+    int exponent;
+    Node* next;
+
+    Node(int coeff, int exp) : coefficient(coeff), exponent(exp), next(NULL) {}
+};
+
+class Polynomial {
+private:
+    Node* head;
+
+public:
+    Polynomial() : head(NULL) {}
+
+    void addTerm(int coefficient, int exponent) {
+        if (coefficient == 0) return;
+
+        Node* newNode = new Node(coefficient, exponent);
+
+        if (!head) {
+            head = newNode;
+        } else {
+            Node* temp = head;
+            while (temp->next) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+    }
+
+    void print() const {
+        if (!head) {
+            cout << "0";
+            return;
+        }
+
+        Node* temp = head;
+        while (temp) {
+            cout << temp->coefficient << "x^" << temp->exponent;
+            if (temp->next && temp->next->coefficient > 0)
+                cout << " + ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+    ~Polynomial() {
+        Node* temp;
+        while (head) {
+            temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+};
+
+int main() {
+    Polynomial poly;
+
+    int n;
+    cout << "Nhap so luong hang tu cua da thuc: ";
+    cin >> n;
+
+    for (int i = 0; i < n; ++i) {
+        int coeff, exp;
+        cout << "Nhap he so va bac so mu cua hang tu " << i + 1 << ": ";
+        cin >> coeff >> exp;
+        poly.addTerm(coeff, exp);
+    }
+
+    cout << "Đa thuc la: ";
+    poly.print();
+
+    return 0;
+}
+
